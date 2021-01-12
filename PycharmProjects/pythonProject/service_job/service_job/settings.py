@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'search_work',
     'arcticle',
     'services',
-    'rest_framework'
+    'rest_framework',
+    'import_export'
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,13 @@
 from django.db import models
 
+
+STATUS_CHOICES = [
+    ('2300', '2300'),
+    ('580', '580'),
+    ('3200', '3200'),
+]
+
+
 class Services(models.Model):
     id_service = models.AutoField(primary_key=True)
     title = models.CharField('Название услуги', max_length=100)
@@ -14,6 +22,9 @@ class Services(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
 
 
 class Specialist(models.Model):

@@ -14,7 +14,7 @@ class Articles(models.Model):
 
 
 class News(models.Model):
-    id_news = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     title = models.CharField('Заголовок новости', max_length=55)
     description = models.TextField('Описание новости')
     class Meta:

@@ -3,28 +3,46 @@ from .models import Vacancies, Vacancies_cities, Companies, Reviews, Users, Summ
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
+from django.contrib import messages
+from django.utils.translation import ngettext
 
+
+class CompaniesInline(admin.TabularInline):
+    model = Companies
 
 
 class VacanciesAdmin(admin.ModelAdmin):
-    list_display = ('name_of_vacancy',  'salary_of_mounth', 'graphic_of_work', 'view_reviews_link')
+    list_display = ('name_of_vacancy',  'salary_of_mounth', 'graphic_of_work', 'view_summary_link')
     list_filter = ("salary_of_mounth", "graphic_of_work")
     search_fields = ("name_of_vacancy__startswith", )
+    inlines = [CompaniesInline]
+    actions = ['make_graphic_1']
+
+    def make_graphic_1(self, request, queryset):
+      updated = queryset.update(graphic_of_work='Полная занятость/гибкий график')
+      self.message_user(request, ngettext(
+            '%d Запись была успешно обновлена',
+            '%d Записи были успешно обновлены',
+            updated,
+        ) % updated, messages.SUCCESS)
 
 
-    def view_reviews_link(self, obj):
+    def view_summary_link(self, obj):
         count = obj.summary_set.count()
         url = (
-            reverse("admin:search_work_reviews_changelist")
+            reverse("admin:search_work_summary_changelist")
             + "?"
-            + urlencode({"id_vacancies": f"{obj.id}"})
+            + urlencode({"id_vacancies": f"{obj.id_summary}"})
         )
         return format_html('<a href="{}">{} Резюме</a>', url, count)
 
         view_reviews_link.short_description = "Резюме"
 
 
+
 admin.site.register(Vacancies, VacanciesAdmin)
+
+
 
 
 class Vacancies_citiesAdmin(admin.ModelAdmin):
@@ -36,9 +54,21 @@ admin.site.register(Vacancies_cities, Vacancies_citiesAdmin)
 
 
 class CompaniesAdmin(admin.ModelAdmin):
-    list_display = ('name_company', 'description_company', 'rating_company')
+    list_display = ('name_company', 'description_company', 'rating_company', 'view_reviews_link')
     list_filter = ("rating_company",)
     search_fields = ("name_company__startswith", )
+
+
+    def view_reviews_link(self, obj):
+        count = obj.reviews_set.count()
+        url = (
+            reverse("admin:search_work_reviews_changelist")
+            + "?"
+            + urlencode({"id_company": f"{obj.id_reviews}"})
+        )
+        return format_html('<a href="{}">{} Отзыв</a>', url, count)
+
+        view_reviews_link.short_description = "Отзыв"
 
 
 admin.site.register(Companies, CompaniesAdmin)

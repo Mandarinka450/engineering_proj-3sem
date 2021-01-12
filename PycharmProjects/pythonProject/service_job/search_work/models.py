@@ -15,6 +15,12 @@ class Vacancies_cities(models.Model):
         return self.name_cities
 
 
+STATUS_CHOICES = [
+    ('Полная занятость/гибкий график', 'Полная занятость/гибкий график'),
+    ('Полная занятость/полный день', 'Полная занятость/полный день'),
+    ('Полная занятость/удаленная работа', 'Полная занятость/удаленная работа'),
+]
+
 class Vacancies(models.Model):
     id_vacancies = models.ForeignKey(Vacancies_cities, on_delete=models.CASCADE)
     name_of_vacancy = models.CharField('Название вакансии', max_length=100)
@@ -30,6 +36,7 @@ class Vacancies(models.Model):
 
     def __str__(self):
        return self.name_of_vacancy
+
 
 
 class Summary(models.Model):
