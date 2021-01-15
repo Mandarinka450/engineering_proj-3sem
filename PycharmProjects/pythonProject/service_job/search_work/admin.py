@@ -16,10 +16,19 @@ class VacanciesAdmin(admin.ModelAdmin):
     list_filter = ("salary_of_mounth", "graphic_of_work")
     search_fields = ("name_of_vacancy__startswith", )
     inlines = [CompaniesInline]
-    actions = ['make_graphic_1']
+    actions = ['make_graphic_1', 'make_graphic_2']
 
     def make_graphic_1(self, request, queryset):
       updated = queryset.update(graphic_of_work='Полная занятость/гибкий график')
+      self.message_user(request, ngettext(
+            '%d Запись была успешно обновлена',
+            '%d Записи были успешно обновлены',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+
+    def make_graphic_2(self, request, queryset):
+      updated = queryset.update(graphic_of_work='Полная занятость/полный день')
       self.message_user(request, ngettext(
             '%d Запись была успешно обновлена',
             '%d Записи были успешно обновлены',
@@ -84,7 +93,17 @@ admin.site.register(Reviews, ReviewsAdmin)
 
 
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ('name_user', 'surname_user', 'email', 'date_register')
+    list_display = ('name_user', 'surname_user', 'email', 'age', 'date_register')
+    ordering = ('name_user', 'surname_user')
+    actions = ['make_age']
+
+    def make_age(self, request, queryset):
+      updated = queryset.update(age='34')
+      self.message_user(request, ngettext(
+            '%d Запись была успешно обновлена',
+            '%d Записи были успешно обновлены',
+            updated,
+        ) % updated, messages.SUCCESS)
 
 
 admin.site.register(Users, UsersAdmin)

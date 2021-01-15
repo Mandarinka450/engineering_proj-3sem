@@ -53,11 +53,19 @@ class Summary(models.Model):
        return self.about_myself
 
 
+AGE = [
+    ('p', '21'),
+    ('34', '34'),
+    ('42', '42'),
+]
+
+
 class Users(models.Model):
     id_user = models.ForeignKey(Summary, on_delete=models.CASCADE)
     name_user = models.CharField('Имя пользователя', max_length=55)
     surname_user = models.CharField('Фамилия пользователя', max_length=255)
     email = models.EmailField('Почта')
+    age = models.IntegerField('Возраст пользователя')
     date_register = models.DateField('Дата регистрации')
     class Meta:
         verbose_name = "Пользователь"
